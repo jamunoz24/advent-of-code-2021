@@ -62,8 +62,6 @@ for line in range(2,len(datalist)):
 
 # Creating a boolean matrix to deal with checks
 checked = [ [ [False for i in range(5)] for j in range(5)] for b in range(len(boards)) ]
-#for i in range(len(checked)):
-#    checked[i][2][2] = True
 
 found = False
 foundBoard = -1
