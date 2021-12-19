@@ -46,46 +46,4 @@ func main() {
 	}
 	fmt.Println(sum)
 
-	
-	// for _, fish := range fishList {
-	// 	daysLeft := days - fish
-	// 	childFishies := (daysLeft / 7) + 1
-	// 	fishNum += uint64(childFishies)
-
-	// 	// Populating the child fishy array
-	// 	var fishyArray = []int{}
-	// 	for daysLeft > -1 {
-	// 		fishyArray = append(fishyArray, daysLeft)
-	// 		daysLeft -= 7
-	// 	}
-
-	// 	// fmt.Println(fishyArray)
-
-	// 	for _, day := range fishyArray {
-	// 		countingEights(day, &fishNum)
-	// 	}
-	// }
-
-}
-
-
-func countingEights(days int, fishNum *uint64) {
-	daysLeft := days-9
-	if daysLeft < 0 {
-		return
-	}
-	childFishies := (daysLeft / 7) + 1
-	*fishNum += uint64(childFishies)
-
-	// Populating the child fishy array
-	var fishyArray = []int{}
-	for daysLeft > -1 {
-		fishyArray = append(fishyArray, daysLeft)
-		daysLeft -= 7
-	}
-
-	for _, day := range fishyArray {
-		countingEights(day, fishNum)
-	}
-
 }
