@@ -14,6 +14,7 @@ func main() {
 
 	// First parsing the string to get rid of commas
 	newList := strings.Split(string(datalist), ",")
+
 	// Converting that string array to int
 	var numList = []int{}
 	for _, i := range newList {
