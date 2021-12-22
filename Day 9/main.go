@@ -28,6 +28,7 @@ func main() {
 		checkedmap[i] = make([]bool, sizej)
 	}
 
+	//Part 1
 	// Starting the traversal
 	lowestPoints := []int{}
 	for i, row := range heatmap {
@@ -57,7 +58,7 @@ func main() {
 					lowVal = heatmap[i+1][j]
 				}
 			}
-
+			// Adding it to the bag
 			if lowVal == num && num != 9 {
 				lowestPoints = append(lowestPoints, num)
 			}
@@ -72,83 +73,75 @@ func main() {
 
 	fmt.Printf("Total Sum: %d\n", sum)
 
+	// Part 2
+
+	basins := []int{}
+	for i, row := range heatmap {
+		for j, num := range row {
+			if num != 9 && !checkedmap[i][j] {
+				basinSize := startTraversal(i, j, heatmap, checkedmap)
+				basins = append(basins, basinSize)
+			}
+		}
+	}
+
+	bigBasins := []int{}
+	maxN := 0
+	maxInd := -1
+	for i := 0; i < 3; i++ {
+		for i, num := range basins {
+			if maxN < num {
+				maxN = num
+				maxInd = i
+			}
+		}
+		bigBasins = append(bigBasins, maxN)
+		basins[maxInd] = 0
+		maxN = 0
+		maxInd = -1
+	}
+
+	totalBasins := 1
+	for _, basin := range bigBasins {
+		totalBasins *= basin
+	}
+
+	fmt.Println(bigBasins)
+
+	fmt.Printf("Total Basins: %d\n", totalBasins)
+
 }
 
-// First attempt lol
-func startTraversal(i int, j int, heatmap *[][]int, checkedmap *[][]bool) int {
-	lowVal := (*heatmap)[i][j]
-	potentialLow := []int{-1, -1}
+func startTraversal(i int, j int, heatmap [][]int, checkedmap [][]bool) int {
+	sizei := len(heatmap)
+	sizej := len(heatmap[0])
+	checkedmap[i][j] = true
 
-	sizei := len((*heatmap))
-	sizej := len((*heatmap)[0])
+	sum := 1
 	// Checking up
 	if i-1 >= 0 {
-		if (*heatmap)[i-1][j] < lowVal {
-			lowVal = (*heatmap)[i-1][j]
-			potentialLow[0] = i - 1
-			potentialLow[1] = j
+		if heatmap[i-1][j] < 9 && !checkedmap[i-1][j] {
+			sum += startTraversal(i-1, j, heatmap, checkedmap)
 		}
 	}
 	// Checking left
 	if j-1 >= 0 {
-		if (*heatmap)[i][j-1] < lowVal {
-			lowVal = (*heatmap)[i][j-1]
-			potentialLow[0] = i
-			potentialLow[1] = j - 1
+		if heatmap[i][j-1] < 9 && !checkedmap[i][j-1] {
+			sum += startTraversal(i, j-1, heatmap, checkedmap)
 		}
 	}
 	// Checking right
 	if j+1 < sizej {
-		if (*heatmap)[i][j+1] < lowVal {
-			lowVal = (*heatmap)[i][j+1]
-			potentialLow[0] = i
-			potentialLow[1] = j + 1
+		if heatmap[i][j+1] < 9 && !checkedmap[i][j+1] {
+			sum += startTraversal(i, j+1, heatmap, checkedmap)
 		}
 	}
 	// Checking down
 	if i+1 < sizei {
-		if (*heatmap)[i+1][j] < lowVal {
-			lowVal = (*heatmap)[i+1][j]
-			potentialLow[0] = i + 1
-			potentialLow[1] = j
+		if heatmap[i+1][j] < 9 && !checkedmap[i+1][j] {
+			sum += startTraversal(i+1, j, heatmap, checkedmap)
 		}
 	}
 
-	// Marking our checks
-	lowi := potentialLow[0]
-	lowj := potentialLow[1]
-
-	// Nothing was found; this is the lowest; return this val
-	if lowi < 0 || lowj < 0 {
-		markAll(i, j, checkedmap)
-		return lowVal
-	}
-
-	// The low val location was already marked/checked
-	if (*checkedmap)[lowi][lowj] {
-		markAll(i, j, checkedmap)
-		return -1
-	}
-
-	// fmt.Printf("%d ", lowVal)
-	markAll(i, j, checkedmap)
-	return startTraversal(lowi, lowj, heatmap, checkedmap)
-}
-
-func markAll(i int, j int, checkedmap *[][]bool) {
-	sizei := len((*checkedmap))
-	sizej := len((*checkedmap)[0])
-	(*checkedmap)[i][j] = true
-	if i-1 >= 0 {
-		(*checkedmap)[i-1][j] = true
-	}
-	if j-1 >= 0 {
-		(*checkedmap)[i][j-1] = true
-	}
-	if j+1 < sizej {
-		(*checkedmap)[i][j+1] = true
-	}
-	if i+1 < sizei {
-		(*checkedmap)[i+1][j] = true
-	}
+	return sum
 }
