@@ -14,7 +14,7 @@ type cave struct {
 }
 
 func main() {
-	datalist, _ := os.ReadFile("example.in")
+	datalist, _ := os.ReadFile("input.in")
 
 	input := strings.Fields(string(datalist))
 
@@ -52,16 +52,60 @@ func main() {
 	}
 
 	printSystem(System)
+	travSys := copyMap(System)
+	paths := 0
+	curPath := []string{"start"}
 
+	findPaths(travSys, "start", &paths, curPath)
+
+	fmt.Println(paths)
+}
+
+func findPaths(System map[string]cave, cur string, paths *int, curPath []string) {
+	if cur == "end" {
+		(*paths) += 1
+		return
+	}
+	// Make Used if its a small cave
+	if System[cur].Small {
+		System[cur] = makeUsed(System[cur])
+	}
+
+	// Traversing through unused caves
+	for _, node := range System[cur].Neighbors {
+		if !System[node].Used {
+			nextPath := []string{}
+			nextPath = append(nextPath, curPath...)
+			nextPath = append(nextPath, node)
+			travSys := copyMap(System)
+			if node == "end" {
+				fmt.Println(nextPath)
+			}
+
+			findPaths(travSys, node, paths, nextPath)
+		}
+	}
 
 }
 
-func findPaths(System map[string]cave, cur string, paths [][]string) {
+func makeUsed(oldCave cave) cave {
+	return cave{
+		Neighbors: oldCave.Neighbors,
+		Small:     oldCave.Small,
+		Used:      true,
+	}
+}
 
+func copyMap(amap map[string]cave) map[string]cave {
+	newMap := make(map[string]cave)
+	for key, val := range amap {
+		newMap[key] = val
+	}
+	return newMap
 }
 
 func printSystem(System map[string]cave) {
 	for key, val := range System {
-			fmt.Printf("%s: %v\n", key, val)
+		fmt.Printf("%s: %v\n", key, val)
 	}
 }
