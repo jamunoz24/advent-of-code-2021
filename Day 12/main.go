@@ -55,13 +55,14 @@ func main() {
 	travSys := copyMap(System)
 	paths := 0
 	curPath := []string{"start"}
+	passedTwice := false
 
-	findPaths(travSys, "start", &paths, curPath)
+	findPaths(travSys, "start", &paths, curPath, passedTwice)
 
-	fmt.Println(paths)
+	fmt.Printf("Paths found: %d\n", paths)
 }
 
-func findPaths(System map[string]cave, cur string, paths *int, curPath []string) {
+func findPaths(System map[string]cave, cur string, paths *int, curPath []string, passedTwice bool) {
 	if cur == "end" {
 		(*paths) += 1
 		return
@@ -73,16 +74,21 @@ func findPaths(System map[string]cave, cur string, paths *int, curPath []string)
 
 	// Traversing through unused caves
 	for _, node := range System[cur].Neighbors {
-		if !System[node].Used {
+		if node != "start" &&
+		(!System[node].Used || (System[node].Used && !passedTwice)) {
 			nextPath := []string{}
 			nextPath = append(nextPath, curPath...)
 			nextPath = append(nextPath, node)
 			travSys := copyMap(System)
-			if node == "end" {
-				fmt.Println(nextPath)
+			// if node == "end" {
+			//	  fmt.Println(nextPath)
+			// }
+			if System[node].Used && !passedTwice {
+			findPaths(travSys, node, paths, nextPath, true)
+			} else {
+				findPaths(travSys, node, paths, nextPath, passedTwice)
 			}
 
-			findPaths(travSys, node, paths, nextPath)
 		}
 	}
 
