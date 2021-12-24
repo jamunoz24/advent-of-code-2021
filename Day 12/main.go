@@ -8,7 +8,7 @@ import (
 )
 
 type cave struct {
-	Neighbors []string `default:{}`
+	Neighbors []string //`default:{}`
 	Small     bool
 	Used      bool
 }
