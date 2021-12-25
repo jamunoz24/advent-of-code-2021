@@ -18,7 +18,7 @@ type fold struct {
 }
 
 func main() {
-	datalist, _ := os.ReadFile("example.in")
+	datalist, _ := os.ReadFile("input.in")
 
 	input := strings.Fields(string(datalist))
 
@@ -81,6 +81,7 @@ func main() {
 			for i:=0; i < sizeX; i++ {
 				matrix[cut][i] = "-"
 			}
+			printMatrix(matrix)
 			// Splitting the Matrix
 			firstHalf := matrix[:cut]
 			secondHalf := matrix[cut+1:]
@@ -106,6 +107,7 @@ func main() {
 			for i:=0; i < sizeY; i++ {
 				matrix[i][cut] = "|"
 			}
+			printMatrix(matrix)
 			// Splitting the Matrix
 			firstHalf := [][]string{}
 			secondHalf := [][]string{}
@@ -124,8 +126,8 @@ func main() {
 				secondHalf = append(secondHalf, newline)
 			}
 			// Inversing the second matrix left
-			printMatrix(firstHalf)
-			printMatrix(secondHalf)
+			// printMatrix(firstHalf)
+			// printMatrix(secondHalf)
 			sizeX -= cut+1
 			for i:=0; i < sizeY; i++ {
 				k := sizeX-1
@@ -134,7 +136,7 @@ func main() {
 					k -= 1
 				}
 			}
-			printMatrix(secondHalf)
+			// printMatrix(secondHalf)
 			// Intersecting the Matrices
 			for i:=0; i < sizeY; i++ {
 				for j:=0; j < sizeX; j++ {
@@ -167,11 +169,7 @@ func printMatrix(matrix [][]string) {
 	fmt.Println("Matrix:")
 	for _, line := range matrix {
 		for _, ind := range line {
-			if ind == "." {
-				fmt.Print(".")
-			} else {
-				fmt.Print("#")
-			}
+			print(ind)
 		}
 		fmt.Println()
 	}
